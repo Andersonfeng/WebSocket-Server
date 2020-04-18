@@ -29,10 +29,6 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class RoomEndpoint {
-
-    //todo 右 上 左玩家应该只用卡背prefab
-    //todo 将各卡牌数量信息传到服务器并更新到客户端
-    //todo 将出牌信息更新到服务器并更新到客户端
     private static final Map<String, Room> roomMap = new ConcurrentHashMap<>();
     public static final String LIST = "LIST";
     public static final String CREATE = "CREATE";
@@ -91,7 +87,6 @@ public class RoomEndpoint {
             String roomName = message.split(":")[1];
 
             if (StringUtils.isEmpty(roomName))
-                //todo 房间名不能空
                 return;
             createRoom(roomName, playerName, session);
             sendMessageToAll(CommonResponse.buildSuccess(listRoom()));
@@ -214,12 +209,6 @@ public class RoomEndpoint {
             int username = Integer.parseInt(message.split(":")[2]);
             sendMessageToRoom(roomName, CommonResponse.buildSuccess(ResponseCodeEnum.WIN.code, "WINNER IS " + username));
         }
-
-
-        //todo 出牌
-        //todo 轮流
-        //todo 胜利
-        //todo 游戏结束
     }
 
     /**
