@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Testing websockets</title>
+</head>
+<body>
+<div>
+    Room Name:<input id="roomName" size="10" value="Hall"/>
+    Name:<input id="name" size="10"/>
+    <input type="submit" value="Connect" onclick="connect()"/>
+    <br>
+    Url:<input id="webSocketUrl" size="200" value="ws://localhost:8080/myHandler"/>
+    <input type="submit" value="ConnectToUrl" onclick="connectToUrl()"/>
+
+    <br>
+    Message:<input id="message" width="100px" value="LIST"/>
+    <br>
+    <input type="submit" value="Send" onclick="send()"/>
+    <input type="submit" value="Create" onclick="create()"/>
+    <input type="submit" value="JOIN" onclick="join()"/>
+    <input type="submit" value="LIST" onclick="listRoom()"/>
+    <input type="submit" value="EXIT" onclick="exit()"/>
+    <input type="submit" value="CLEAR" onclick="clearMessage()"/>
+
+
+</div>
+<div id="messages"></div>
+<script type="text/javascript">
+    document.getElementById("name").value = "Fky" + Math.random()
+    var webSocket;
+
+    function connectToUrl() {
+        webSocket = new WebSocket(document.getElementById('webSocketUrl').value);
+        webSocket.onerror = function (event) {
+            onError(event)
+        };
+
+        webSocket.onopen = function (event) {
+            onOpen(event)
+        };
+
+        webSocket.onmessage = function (event) {
+            onMessage(event)
+        };
+    }
+
+    function create() {
+        var roomName = document.getElementById("roomName").value;
+        webSocket.send("CREATE:" + roomName);
+    }
+
+    function clearMessage() {
+        document.getElementById('messages').innerHTML = "";
+    }
+
+    function exit() {
+        var roomName = document.getElementById("roomName").value;
+        webSocket.send("EXIT:" + roomName);
+    }
+
+    function listRoom() {
+        webSocket.send("LIST");
+    }
+
+    function join() {
+        var roomName = document.getElementById("roomName").value;
+        webSocket.send("JOIN:" + roomName);
+    }
+
+    function send() {
+        var message = document.getElementById("message").value;
+        webSocket.send(message);
+        document.getElementById("message").value = "";
+    }
+
+    function connect() {
+        var webSocketUrl = "ws://localhost:8080/webSocket/room/";
+
+        webSocketUrl += document.getElementById("name").value;
+        webSocket = new WebSocket(webSocketUrl);
+
+        webSocket.onerror = function (event) {
+            onError(event)
+        };
+
+        webSocket.onopen = function (event) {
+            onOpen(event)
+        };
+
+        webSocket.onmessage = function (event) {
+            onMessage(event)
+        };
+    }
+
+
+    function onMessage(event) {
+        document.getElementById('messages').innerHTML
+            += '<br />' + event.data;
+    }
+
+    function onOpen(event) {
+        document.getElementById('messages').innerHTML
+            += 'Connection established';
+    }
+
+    function onError(event) {
+        alert(event.data);
+    }
+
+
+</script>
+</body>
+</html>
