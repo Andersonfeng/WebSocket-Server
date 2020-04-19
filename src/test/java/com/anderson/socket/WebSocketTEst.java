@@ -37,11 +37,22 @@ public class WebSocketTEst {
     private static final Map<String, Room> roomMap = new ConcurrentHashMap<>();
 
     @Test
+    public void testWinInputString() throws JsonProcessingException {
+        String message = "WIN:Baba's Room:HelloA   plyaerName:HelloA";
+        String roomName = message.split(":")[1];
+        String username = message.split(":")[2];
+        CommonResponse commonResponse = CommonResponse.buildSuccess(ResponseCodeEnum.WIN.code, "WINNER IS " + username);
+        String responseMessage = objectMapper.writeValueAsString(commonResponse);
+        System.out.println(responseMessage);
+    }
+
+
+    @Test
     public void testRemoveCardFromPlayer() throws JsonProcessingException {
         List<Player.Poker> pokerList1 = new ArrayList<>() {{
-            add(new Player.Poker(7,2));
-            add(new Player.Poker(3,4));
-            add(new Player.Poker(3,2));
+            add(new Player.Poker(7, 2));
+            add(new Player.Poker(3, 4));
+            add(new Player.Poker(3, 2));
         }};
         String pokerListJson = "[{\"point\":7,\"color\":2},{\"point\":3,\"color\":4}]";
         var pokerList2 = objectMapper.readValue(pokerListJson, new TypeReference<List<Player.Poker>>() {
